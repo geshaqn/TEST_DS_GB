@@ -5,5 +5,7 @@ def load_pipeline(path='fitted_model.sav'):
     return joblib_load(path)
 
 def predict(pipeline, row):
-    "Predict probability of motor breaking on current cycle"
-    return pipeline.predict([row[1:]])
+    "Predict if motor is OK"
+    if pipeline.predict([row[1:]])[0] < 0.8:
+        return 'OK'
+    return 'TO'
