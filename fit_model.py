@@ -1,11 +1,12 @@
 from csv import reader
 import numpy as np
-from sklearn.linear_model import SGDRegressor
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import NuSVR
 from random import randint
+from sklearn.pipeline import Pipeline
 import joblib
 
-f = open(r'D:\Mine\data.csv')
+f = open('data.csv')
 raw_data = list(reader(f))
 title = raw_data[0][1:]
 raw_data = np.array(raw_data[1:], float)
@@ -24,6 +25,7 @@ train_Y = target
 scaler = StandardScaler()
 scaler.fit(train_X)
 train_X = scaler.transform(train_X)
-model = SGDRegressor(max_iter=3000, tol=1e-4)
+model = NuSVR(C = 1.0, nu = 0.1)
 model.fit(train_X, train_Y)
-joblib.dump(model, "fitted_model.sav")
+pipe = Pipeline([('Scaler',scaler),('SVR',model)])
+joblib.dump(pipe, "fitted_model.sav")
